@@ -6,19 +6,17 @@ import 'build_runner.dart' as br;
 
 const tpl="import 'package:json_annotation/json_annotation.dart';\n%t\npart '%s.g.dart';\n\n@JsonSerializable()\nclass %s {\n    %s();\n\n    %s\n    factory %s.fromJson(Map<String,dynamic> json) => _\$%sFromJson(json);\n    Map<String, dynamic> toJson() => _\$%sToJson(this);\n}\n";
 
-void main(List<String> args) {
-  String src;
-  String dist;
-  String tag;
+void run(List<String> args) {
+  String src = '';
+  String dist = '';
+  String tag = '';
   var parser = new ArgParser();
-  parser.addOption('src', defaultsTo: './jsons', callback: (v) => src = v, help: "Specify the json directory.");
-  parser.addOption('dist', defaultsTo: 'lib/models', callback: (v) => dist = v, help: "Specify the dist directory.");
-  parser.addOption('tag', defaultsTo: '\$', callback: (v) => tag = v, help: "Specify the tag ");
+  parser.addOption('src', defaultsTo: './jsons', callback: (v) => src = v!, help: "Specify the json directory.");
+  parser.addOption('dist', defaultsTo: 'lib/models', callback: (v) => dist = v!, help: "Specify the dist directory.");
+  parser.addOption('tag', defaultsTo: '\$', callback: (v) => tag = v!, help: "Specify the tag ");
   parser.parse(args);
-  print(args);
-  if(walk(src, dist,tag)) {
-    //br.run(['clean']);
-    br.run(['build', '--delete-conflicting-outputs']);
+  if(walk(src, dist, tag)) {
+    br.main(['build', '--delete-conflicting-outputs']);
   }
 }
 
@@ -56,7 +54,7 @@ bool walk(String srcDir, String distDir, String tag ) {
             set.add(key.substring(1)+" '$v'");
             return;
           }
-          attrs.write(key);
+          attrs.write("$key?");
           attrs.write(" ");
           attrs.write(v);
           attrs.writeln(";");
@@ -70,7 +68,7 @@ bool walk(String srcDir, String distDir, String tag ) {
       });
       String  className=name[0].toUpperCase()+name.substring(1);
       var dist=format(tpl,[name,className,className,attrs.toString(),
-      className,className,className]);
+        className,className,className]);
       var _import=set.join(";\r\n");
       _import+=_import.isEmpty?"":";";
       dist=dist.replaceFirst("%t",_import );
@@ -99,33 +97,34 @@ bool isBuiltInType(String type){
 String getType(v,Set<String> set,String current, tag){
   current=current.toLowerCase();
   if(v is bool){
-    return "bool";
+    return "bool?";
   }else if(v is num){
-    return "num";
+    return "int?";
   }else if(v is Map){
-    return "Map<String,dynamic>";
+    return "Map<String,dynamic>?";
   }else if(v is List){
-    return "List";
+    return "List?";
   }else if(v is String){ //处理特殊标志
     if(v.startsWith("$tag[]")){
       var type=changeFirstChar(v.substring(3),false);
       if(type.toLowerCase()!=current&&!isBuiltInType(type)) {
         set.add('import "$type.dart"');
       }
-      return "List<${changeFirstChar(type)}>";
+      return "List<${changeFirstChar(type)}>?";
 
     }else if(v.startsWith(tag)){
       var fileName=changeFirstChar(v.substring(1),false);
       if(fileName.toLowerCase()!=current) {
         set.add('import "$fileName.dart"');
       }
-      return changeFirstChar(fileName);
+      return "${changeFirstChar(fileName)}?";
     }else if(v.startsWith("@")){
-      return v;
+      print(v);
+      return "$v?";
     }
-    return "String";
+    return "String?";
   }else{
-    return "String";
+    return "String?";
   }
 }
 

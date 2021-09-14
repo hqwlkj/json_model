@@ -163,5 +163,15 @@ import 'package:json_model/json_model.dart';
 void main() {
   run(['src=jsons']);  //run方法为json_model暴露的方法；
 }
+
+// 生成完成后执行下面脚本生成 *.g.dart 文件
+$ flutter pub run build_runner build // 一次性代码生成
+
+OR
+
+$ flutter pub run build_runner watch  // 持续生成代码  
+    
+
 ```
 
+更多细节[参考这里](https://flutter.cn/docs/development/data-and-backend/json#serializing-json-using-code-generation-libraries)

@@ -1,5 +1,6 @@
 {
-  "name":"wendux",
-  "age":20,
-  "male":true
+  "name": "wendux",
+  "age": 20,
+  "male": true,
+  "address": "重庆市"
 }

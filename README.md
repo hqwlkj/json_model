@@ -157,7 +157,17 @@ If you want to run json_model by code instead command line, you can:
 ```dart
 import 'package:json_model/json_model.dart';
 void main() {
-  run(['src=jsons']);  //run
+  run(['src=jsons']);  //The run method is the method exposed by json_model;
 }
+
+// After the generation is complete, execute the following script to generate the *.g.dart file
+$ flutter pub run build_runner build // One-time code generation
+
+OR
+
+$ flutter pub run build_runner watch  // Continuously generate code  
+    
+
 ```
 
+More details [refer here](https://flutter.cn/docs/development/data-and-backend/json#serializing-json-using-code-generation-libraries)
