@@ -140,7 +140,7 @@ class User {
 
 ##  命令参数
 
-默认的源json文件目录为根目录下名为 "json" 的目录；可以通过 `src` 参数自定义源json文件目录，例如:
+默认的源json文件目录为根目录下名为 "jsons" 的目录；可以通过 `src` 参数自定义源json文件目录，例如:
 
 ```shell
 pub run json_model src=json_files 
@@ -152,7 +152,7 @@ pub run json_model src=json_files
 pub run json_model src=json_files  dist=data # 输出目录为 lib/data
 ```
 
-> 注意，dist会默认已lib为根目录。
+> 注意，dist会默认以lib为根目录。
 
 ## 代码调用
 
